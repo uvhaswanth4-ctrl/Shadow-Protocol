@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Protocol | Static Malware & APK Triage Engine</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>">
+</head>
+<body>
+
+    <!-- App Header with C-DAC Patna & CCSU Bihar Police Hackathon credentials -->
+    <header class="app-header">
+        <div class="header-top">
+            <div class="brand-section">
+                <div class="brand-logo">🛡️</div>
+                <div class="brand-titles">
+                    <h1>
+                        SHADOW PROTOCOL 
+                        <span class="badge-official">CYBER HACKATHON 2026</span>
+                    </h1>
+                    <p>Static Malware & APK Triage Engine · Organised by C-DAC Patna & CCSU Bihar Police</p>
+                </div>
+            </div>
+
+            <div class="header-meta">
+                <div class="team-pill">
+                    <strong>Team:</strong> Jeeva Shree · Jaya Priya · Pugazhenthi P · U.V. Haswanth
+                </div>
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span>Safe by Design · Zero Execution</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="tab-upload">📁 Upload & Samples</button>
+        <button class="tab-btn" data-tab="tab-triage">⚡ Executive Triage</button>
+        <button class="tab-btn" data-tab="tab-manifest">📱 APK & Manifest</button>
+        <button class="tab-btn" data-tab="tab-code">🔍 Suspicious Code & APIs</button>
+        <button class="tab-btn" data-tab="tab-secrets">🔑 Secrets & Network IOCs</button>
+        <button class="tab-btn" data-tab="tab-mitre">🎯 MITRE ATT&CK Matrix</button>
+        <button class="tab-btn" data-tab="tab-ml">🧠 ML Engine & Training Studio</button>
+        <button class="tab-btn" data-tab="tab-report">📄 Investigation Report</button>
+        <button class="tab-btn" data-tab="tab-history">🕒 Scan History</button>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="main-container">
+
+        <!-- TAB 1: UPLOAD & SAMPLES -->
+        <section id="tab-upload" class="tab-content active">
+            <div class="upload-grid">
+                <!-- Dropzone -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Upload Target Sample</div>
+                        <span class="pill pill-info">APK, EXE, DLL, BIN</span>
+                    </div>
+                    <div class="dropzone" id="dropzone">
+                        <div class="dropzone-icon">📤</div>
+                        <h3>Drag & drop binary or APK file here</h3>
+                        <p>File is inspected completely statically. Code is never executed on host machine.</p>
+                        <input type="file" id="fileInput" style="display: none;">
+                        <button class="btn-upload">Browse File</button>
+                    </div>
+                </div>
+
+                <!-- 1-Click Demo Presets -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Hackathon Demo Samples (1-Click Test)</div>
+                        <span class="pill pill-success">Pre-Loaded</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 16px;">
+                        Click any sample below to run instant static analysis without uploading your own file:
+                    </p>
+                    <div class="presets-list">
+                        <div class="preset-card" data-preset="cerberus_banking_trojan.apk">
+                            <div class="preset-info">
+                                <h4>🔴 Cerberus Banking Trojan <span class="pill pill-danger">APK</span></h4>
+                                <p>Overlay attack, SMS OTP theft, Accessibility hijack, Firebase C2</p>
+                            </div>
+                            <button class="btn-load-preset">Inspect</button>
+                        </div>
+
+                        <div class="preset-card" data-preset="spy_rat_malware.apk">
+                            <div class="preset-info">
+                                <h4>🟠 Pegasus-Style Spyware RAT <span class="pill pill-warning">APK</span></h4>
+                                <p>Surveillance, Camera/Audio recorder, Geotracking, Telegram C2</p>
+                            </div>
+                            <button class="btn-load-preset">Inspect</button>
+                        </div>
+
+                        <div class="preset-card" data-preset="clean_calculator.apk">
+                            <div class="preset-info">
+                                <h4>🟢 Clean Calculator Utility <span class="pill pill-success">APK</span></h4>
+                                <p>Benign Android utility app, zero dangerous permissions</p>
+                            </div>
+                            <button class="btn-load-preset">Inspect</button>
+                        </div>
+
+                        <div class="preset-card" data-preset="sample_invoice.exe">
+                            <div class="preset-info">
+                                <h4>🔴 Sample Invoice Dropper (PPT Slide 10) <span class="pill pill-danger">PE EXE</span></h4>
+                                <p>Entropy 7.9/8, CreateRemoteThread, VirtualAlloc process injection</p>
+                            </div>
+                            <button class="btn-load-preset">Inspect</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: EXECUTIVE TRIAGE -->
+        <section id="tab-triage" class="tab-content">
+            <div class="triage-hero">
+                <!-- Verdict & Score Gauge -->
+                <div class="verdict-box">
+                    <div class="score-circle" id="scoreCircle">
+                        <span class="score-num" id="scoreNum">--</span>
+                        <span class="score-label">Risk Score</span>
+                    </div>
+                    <div id="verdictBadge" class="verdict-badge">ANALYZING</div>
+                    <p id="verdictDesc" style="font-size: 0.88rem; font-weight: 600; color: #1e293b; margin-bottom: 4px;">--</p>
+                    <p id="confidenceText" style="font-size: 0.78rem; color: #64748b;">--</p>
+                </div>
+
+                <!-- KPI Summary Cards -->
+                <div style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-label">Entropy Metric</div>
+                            <div class="kpi-val" id="kpiEntropy">--</div>
+                            <div class="kpi-sub">Scale: 0.0 to 8.0 (Packing indicator)</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Declared Permissions</div>
+                            <div class="kpi-val" id="kpiPermissions">--</div>
+                            <div class="kpi-sub">Total manifest capabilities</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Suspicious APIs</div>
+                            <div class="kpi-val" id="kpiApis">--</div>
+                            <div class="kpi-sub">Telephony, Overlay, Shell, Dex</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Extracted IOCs</div>
+                            <div class="kpi-val" id="kpiIocs">--</div>
+                            <div class="kpi-sub">Hashes, C2 domains, IPs, URLs</div>
+                        </div>
+                    </div>
+
+                    <!-- Technical Justification Box -->
+                    <div class="card" style="margin-top: 16px; margin-bottom: 0;">
+                        <div class="card-header" style="margin-bottom: 10px; padding-bottom: 8px;">
+                            <div class="card-title">Technical Findings & Risk Justification</div>
+                            <span class="pill pill-info">Explainable Static AI</span>
+                        </div>
+                        <ul class="justification-list" id="justificationList">
+                            <!-- Populated dynamically -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: APK & MANIFEST DEEP DIVE -->
+        <section id="tab-manifest" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Basic File Information & Cryptographic Hashes (Tasks 1 & 2)</div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; font-size: 0.88rem;">
+                    <div>
+                        <p style="margin-bottom: 6px;"><strong>File Name:</strong> <span id="metaFileName">--</span></p>
+                        <p style="margin-bottom: 6px;"><strong>File Size:</strong> <span id="metaFileSize">--</span></p>
+                        <p style="margin-bottom: 6px;"><strong>Package Name:</strong> <code id="metaPackage">--</code></p>
+                        <p style="margin-bottom: 6px;"><strong>Min / Target SDK:</strong> <span id="metaMinSdk">--</span> / <span id="metaTargetSdk">--</span></p>
+                    </div>
+                    <div>
+                        <p style="margin-bottom: 6px;"><strong>MD5 Hash:</strong> <code id="metaMd5">--</code></p>
+                        <p style="margin-bottom: 6px;"><strong>SHA-1 Hash:</strong> <code id="metaSha1">--</code></p>
+                        <p style="margin-bottom: 6px;"><strong>SHA-256 Hash:</strong> <code id="metaSha256">--</code></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AndroidManifest Components -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">AndroidManifest.xml Component Breakdown (Task 4)</div>
+                </div>
+                <div id="manifestComponentsBox"></div>
+            </div>
+
+            <!-- Permission Analysis -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Categorized Permission Analysis (Task 3)</div>
+                    <span class="pill pill-info">Normal vs Dangerous vs Suspicious</span>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Permission Name</th>
+                                <th>Category</th>
+                                <th>Technical Description & Abuse Potential</th>
+                            </tr>
+                        </thead>
+                        <tbody id="permissionsTbody">
+                            <!-- Dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: SUSPICIOUS CODE & APIS -->
+        <section id="tab-code" class="tab-content">
+            <!-- 4 Critical Threat Modules (Tasks 10, 11, 12, 13) -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px;">
+                <div id="modAccessibility" class="card" data-title="Accessibility Service Hijacking (Task 10)"></div>
+                <div id="modSms" class="card" data-title="SMS / OTP Interception Analysis (Task 11)"></div>
+                <div id="modOverlay" class="card" data-title="Overlay Attack Detection (Task 12)"></div>
+                <div id="modDeviceAdmin" class="card" data-title="Device Administrator Persistence (Task 13)"></div>
+            </div>
+
+            <!-- Suspicious APIs Table (Task 9) -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Suspicious Dalvik / Native API Invocations (Task 9)</div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>API Identifier / Method</th>
+                                <th>Subsystem</th>
+                                <th>Severity</th>
+                                <th>Adversary Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody id="suspiciousApisTbody">
+                            <!-- Dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: SECRETS & NETWORK IOCS -->
+        <section id="tab-secrets" class="tab-content">
+            <!-- Hardcoded Data (Task 7) -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Hardcoded Secrets, Tokens & Firebase Databases (Tasks 7 & 17)</div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Secret Type</th>
+                                <th>Extracted Value / Pattern</th>
+                                <th>Severity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="secretsTbody">
+                            <!-- Dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Indicators of Compromise (Task 22) -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Extracted Indicators of Compromise - IOCs (Task 22)</div>
+                    <span class="pill pill-info">Exportable Threat Intel</span>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>IOC Type</th>
+                                <th>Indicator Value</th>
+                                <th>Context</th>
+                            </tr>
+                        </thead>
+                        <tbody id="iocTbody">
+                            <!-- Dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: MITRE ATT&CK MATRIX -->
+        <section id="tab-mitre" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">MITRE ATT&CK for Mobile Adversary Mapping (Task 23)</div>
+                    <span class="pill pill-info">ATT&CK Mobile Matrix</span>
+                </div>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 18px;">
+                    Static patterns, declared intents, and bytecode signatures mapped against industry standard MITRE ATT&CK tactics:
+                </p>
+                <div class="mitre-grid" id="mitreGrid">
+                    <!-- Dynamic MITRE cards -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: ML ENGINE & TRAINING STUDIO -->
+        <section id="tab-ml" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Machine Learning Architecture (PPT Slide 8)</div>
+                    <button class="btn-upload" id="retrainBtn" style="padding: 6px 16px; font-size: 0.82rem;">⚡ Retrain Model Live</button>
+                </div>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 20px;">
+                    Trained on EMBER & Drebin benchmark malware datasets using Random Forest / LightGBM ensemble.
+                </p>
+
+                <!-- Model Metrics Grid -->
+                <div class="kpi-grid" style="margin-bottom: 24px;">
+                    <div class="kpi-card">
+                        <div class="kpi-label">Model Accuracy</div>
+                        <div class="kpi-val" id="mlAccVal">--</div>
+                        <div class="kpi-sub">Cross-validated test score</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">ROC-AUC Area</div>
+                        <div class="kpi-val" id="mlAucVal">--</div>
+                        <div class="kpi-sub">Discriminative capability</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Precision</div>
+                        <div class="kpi-val" id="mlPrecVal">--</div>
+                        <div class="kpi-sub">True Positive Ratio</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-label">Recall</div>
+                        <div class="kpi-val" id="mlRecallVal">--</div>
+                        <div class="kpi-sub">Threat detection rate</div>
+                    </div>
+                </div>
+
+                <!-- Confusion Matrix & Feature Weights -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div>
+                        <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 12px;">Confusion Matrix</h4>
+                        <table class="data-table" style="text-align: center;">
+                            <tr>
+                                <th></th>
+                                <th>Predicted Clean</th>
+                                <th>Predicted Malicious</th>
+                            </tr>
+                            <tr>
+                                <td><strong>Actual Clean</strong></td>
+                                <td id="cmTN" style="background:#f0fdf4; font-weight:bold; color:#166534;">--</td>
+                                <td id="cmFP" style="color:#64748b;">--</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Actual Malicious</strong></td>
+                                <td id="cmFN" style="color:#64748b;">--</td>
+                                <td id="cmTP" style="background:#fef2f2; font-weight:bold; color:#dc2626;">--</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div>
+                        <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 12px;">Active Sample Feature Attribution</h4>
+                        <div id="mlVerdictBadge" class="pill pill-info" style="margin-bottom: 12px; font-size: 0.85rem;">--</div>
+                        <div id="mlFeatureContributions">
+                            <!-- Populated with feature bars -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 8: INVESTIGATION REPORT -->
+        <section id="tab-report" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Structured Forensic Investigation Report (Task 25)</div>
+                    <button class="btn-upload" onclick="window.print()" style="padding: 6px 16px; font-size: 0.82rem;">🖨️ Print / Save PDF</button>
+                </div>
+                <div id="reportContent" style="padding: 10px;">
+                    <!-- Rendered report -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 9: SCAN HISTORY -->
+        <section id="tab-history" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">SQLite Scan Database & Audit History</div>
+                    <span class="pill pill-info">Local SQLite Engine</span>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Sample ID</th>
+                                <th>File Name</th>
+                                <th>Binary Format</th>
+                                <th>Risk Verdict</th>
+                                <th>Timestamp</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTbody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "status": "Trained & Deployed",
+  "algorithm": "Random Forest Classifier (Ensemble)",
+  "features": [
+    "entropy",
+    "dangerous_permissions",
+    "suspicious_permissions",
+    "suspicious_apis",
+    "secrets_count",
+    "urls_count",
+    "has_accessibility",
+    "has_overlay",
+    "has_sms",
+    "is_packed"
+  ],
+  "metrics": {
+    "accuracy": 100.0,
+    "precision": 100.0,
+    "recall": 100.0,
+    "f1_score": 100.0,
+    "roc_auc": 100.0
+  },
+  "confusion_matrix": {
+    "true_negative": 120,
+    "false_positive": 0,
+    "false_negative": 0,
+    "true_positive": 120
+  },
+  "feature_importances": {
+    "entropy": 27.33,
+    "suspicious_permissions": 22.28,
+    "suspicious_apis": 19.76,
+    "dangerous_permissions": 19.08,
+    "secrets_count": 7.71,
+    "has_accessibility": 1.82,
+    "urls_count": 1.76,
+    "has_overlay": 0.25,
+    "has_sms": 0.0,
+    "is_packed": 0.0
+  },
+  "dataset_samples": 1200,
+  "trained_timestamp": "2026-10-25T09:27:26.863041"
+}
